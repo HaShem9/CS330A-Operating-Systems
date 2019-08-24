@@ -1,3 +1,10 @@
+/* 
+
+Name     : Vaibhav Thakkar
+Roll No. : 170778
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>

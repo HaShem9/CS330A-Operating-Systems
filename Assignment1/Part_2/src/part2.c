@@ -1,3 +1,10 @@
+/* 
+
+Name     : Vaibhav Thakkar
+Roll No. : 170778
+
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -73,14 +80,13 @@ int main(int argc, char const *argv[]){
             close(new_pipe_fd[0]);
             close(new_pipe_fd[1]);
 
-            if(argc == 7){
-                char* arguments[] = {(char*)argv[5], (char*)argv[6], (char*)NULL} ;
-                execvp(argv[5], arguments);
+            int arguments_size = argc-5+1;
+            char* arguments[arguments_size];
+            for(int i=0;i<arguments_size-1;i++){
+                arguments[i] = argv[i+5];
             }
-            else if(argc == 6){
-                char* arguments[] = {(char*)argv[5], (char*)NULL} ;
-                execvp(argv[5], arguments);
-            }
+            arguments[arguments_size-1]= (char*)NULL;
+            execvp(argv[5], arguments);
         }
     }
     
