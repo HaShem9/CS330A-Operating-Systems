@@ -12,6 +12,7 @@ Roll No. : 170778
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 // Main function - program entry point
 int main(int argc, char const *argv[]){
@@ -63,33 +64,42 @@ int main(int argc, char const *argv[]){
         else{   // Child will store result to file as well send it to pipe for next command
             close(fd[1]);   // as child will read from pipe
             int file_fd = open(argv[4], O_RDWR|O_CREAT, 0666);
-            char buf[2048];
+            char buf[1024];
             int count;
             int new_pipe_fd[2]; // for another pipe for transmitting ouput to new command
             if(pipe(new_pipe_fd) < 0)
                 perror("second pipe error");
-
-            // Reading from pipe then sending to file passed as argument
-            while( (count = read(fd[0], &buf, sizeof(buf)-1)) > 0 ){
-                write(file_fd, buf, count);         // writing to file passed 
-                write(new_pipe_fd[1], buf, count);  // writing to new pipe for next command
-            }
             
-            dup2(new_pipe_fd[0], 0);    // As now the next command passed as argument will take input from the file
-            close(fd[0]);
-            close(new_pipe_fd[0]);
-            close(new_pipe_fd[1]);
+            pid = fork();
+            if(pid != 0){   // This process will do the work for tee
+                close(new_pipe_fd[0]);
+                // Reading from pipe then sending to file passed as argument
+                while( (count = read(fd[0], &buf, sizeof(buf)-1)) > 0 ){
+                    write(file_fd, buf, count);         // writing to file passed 
+                    write(new_pipe_fd[1], buf, count);  // writing to new pipe for next command
+                }
 
-            int arguments_size = argc-5+1;
-            char* arguments[arguments_size];
-            for(int i=0;i<arguments_size-1;i++){
-                arguments[i] = (char*)argv[i+5];
+                close(new_pipe_fd[1]);
+                close(file_fd);
             }
-            arguments[arguments_size-1]= (char*)NULL;
-            execvp(argv[5], arguments);
+            else{   // executing the next command
+                close(fd[0]);
+                close(new_pipe_fd[1]);
+                dup2(new_pipe_fd[0], 0);
+                close(new_pipe_fd[0]);
+
+                int arguments_size = argc-5+1;
+                char* arguments[arguments_size];
+                for(int i=0;i<arguments_size-1;i++){
+                    arguments[i] = (char*)argv[i+5];
+                }
+                arguments[arguments_size-1]= (char*)NULL;
+                execvp(argv[5], arguments);
+            }
         }
     }
-    
-    printf("Only @ and $ operators are allowed\n");
+    else{
+        printf("Only @ and $ operators are allowed\n");
+    }
     return 0;
 }
