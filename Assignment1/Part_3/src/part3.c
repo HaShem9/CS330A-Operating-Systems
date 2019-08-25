@@ -139,7 +139,14 @@ int main(int argc, char const* argv[]){
             ans += temp;
         }
 
-        printf("%s %d\n", argv[1], ans);
+        // For printing root directory without last '/' if exists
+        for(int i=0; argv[1][i]!='\0'; i++){
+            if(argv[1][i]=='/' && argv[1][i+1]=='\0'){
+                continue;
+            }
+            printf("%c", argv[1][i]);
+        }
+        printf(" %d\n", ans);
 
     } else{
         size_t ans = buf.st_size;
