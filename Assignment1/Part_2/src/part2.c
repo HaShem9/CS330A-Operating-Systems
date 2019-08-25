@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]){
         }
         else{   // Child will store result to file as well send it to pipe for next command
             close(fd[1]);   // as child will read from pipe
-            int file_fd = open(argv[4], O_RDWR);
+            int file_fd = open(argv[4], O_RDWR|O_CREAT, 0666);
             char buf[2048];
             int count;
             int new_pipe_fd[2]; // for another pipe for transmitting ouput to new command
@@ -83,7 +83,7 @@ int main(int argc, char const *argv[]){
             int arguments_size = argc-5+1;
             char* arguments[arguments_size];
             for(int i=0;i<arguments_size-1;i++){
-                arguments[i] = argv[i+5];
+                arguments[i] = (char*)argv[i+5];
             }
             arguments[arguments_size-1]= (char*)NULL;
             execvp(argv[5], arguments);
