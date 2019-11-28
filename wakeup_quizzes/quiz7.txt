@@ -1,0 +1,7 @@
+1. True or False. Give a brief explanation.
+
+(A) Assuming TLB without ASID support, a full TLB flush is required on
+    every context switch.
+
+(B) The page frames corresponding to the OS code for page fault handling
+    can be swapped out.

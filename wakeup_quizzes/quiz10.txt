@@ -1,0 +1,6 @@
+Consider an indexed file allocation found in the UNIX operating system. The file block index structures contained in the inode are as follows: nine direct block addresses, five single-indirect block addresses, and two double-indirect block addresses. The file system block size is 4KB and block address is 32-bits.
+
+(i) What is the maximum disk size supported by this file system?
+(iii) What is the maximum file size supported by this file system?
+(iii) What is the actual disk usage to store a 5GB file (ignore the space usage for storing inodes)?
+(iv) If a user requests to read a single block from a file of size 1GB at a random file offset (4KB aligned), calculate the minimum and maximum size of disk read required to serve the request? Assume that, the disk inode corresponding to the file is present in memory.

@@ -1,0 +1,16 @@
+Values 10, 5 and 15 were inserted into an initially empty BST in the mentioned order. After that, values 14, 12, and 9 are inserted in parallel by three different threads. Assume that a single pointer update is atomic and 
+standard BST node representation 
+as shown below,
+
+struct bst_node_t{
+                   unsigned item;
+                   struct bst_node_t *right;
+                   struct bst_node_t *left;
+};
+
+Assuming no synchronization, draw all possible trees in the following conditions.
+
+(a) While adding a node into the BST, the node is created first with item as inserted value after which the pointer adjustments are performed. 
+
+(b) While adding a node into the BST, the node is added to the tree first 
+ (performing the parent pointer adjustments) after which the value of item is set to the inserted value. 
